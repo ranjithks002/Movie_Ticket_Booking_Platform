@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/" xmlns:C="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap"
+          rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<style>
+    :root {
+      --red: #FF0000;
+      --gold: #ffd60a;
+      --dark: #0d0d0d;
+      --card-bg: #1a1a1a;
+      --text: #000000;
+      --muted: #888;
+      --light: #F3F4F4;
+      --border: #000000;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    html::-webkit-scrollbar {
+    display: none;
+}
+
+     body {
+      background: var(--light);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh
+    }
+
+    nav {
+        position: sticky;
+        top: 0;
+      z-index: 100;
+      background-color: white;
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px
+    }
+    nav img {
+        height: 50px;
+        width: auto;
+    }
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center
+    }
+     .btn {
+      padding: 8px 22px;
+      border-radius: 6px;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border)
+    }
+    .btn-outline:hover {
+      border-color: var(--dark);
+      transform: scale(1.1)
+    }
+     .btn-primary {
+      background: var(--red);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #FF5C5C;
+      transform: scale(1.1)
+    }
+    .btn-gold {
+      background: var(--red);
+      color: white;
+    }
+
+    .btn-gold:hover {
+      background: var(--red);
+      color: white;
+      transform: translateY(-1px)
+    }
+
+    .btn-admin {
+      background: transparent;
+      color: var(--muted);
+      border: 1.5px dashed #333;
+      font-size: 0.82rem
+    }
+
+    .btn-admin:hover {
+      border-color: var(--dark);
+      transform: scale(1.1)
+    }
+
+    .hero {
+      text-align: center;
+      padding: 80px 40px 50px;
+    }
+
+    .hero h1 {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-size: 100px;
+      font-weight: 1000;
+      line-height: 1;
+      margin-bottom: 12px
+    }
+
+    .hero h1 em {
+      color: var(--red);
+      font-style: normal
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.1rem
+    }
+    .section {
+      padding: 20px 40px 60px;
+      max-width: 1600px;
+      margin: 0 auto
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 3px;
+      background: var(--red);
+      margin-top: 4px
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 24px
+    }
+
+    .movie-card {
+      background: var(--light);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.25s, box-shadow 0.25s;
+      border: 1px solid var(--border);
+      position: relative
+    }
+
+    .movie-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      border-color: rgba(255, 214, 10, 0.2)
+    }
+
+    .movie-poster {
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      display: block;
+      background: #2a2a2a
+    }
+
+    .poster-placeholder {
+      width: 100%;
+      aspect-ratio: 2/3;
+      background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #444
+    }
+
+    .poster-placeholder span {
+      font-size: 2.5rem
+    }
+
+    .poster-placeholder p {
+      font-size: 0.75rem
+    }
+
+    .movie-info {
+      padding: 14px
+    }
+
+    .movie-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .movie-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 10px
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-right: 4px
+    }
+
+    .badge-genre {
+      background: rgba(230, 57, 70, 0.2);
+      color: var(--red)
+    }
+
+    .badge-lang {
+      background: rgba(255, 214, 10, 0.15);
+      color: var(--gold)
+    }
+
+    .btn-book {
+      width: 100%;
+      padding: 9px;
+      background: var(--red);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px
+    }
+
+    .btn-book:hover {
+      background: #c1121f
+    }
+
+    .badge-new {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--gold);
+      color: #111;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px
+    }
+    .admin-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center
+    }
+
+    .admin-overlay.open {
+      display: flex
+    }
+
+    .admin-panel {
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: min(680px, 95vw);
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 36px;
+      position: relative
+    }
+
+    .admin-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      margin-bottom: 6px
+    }
+
+    .admin-subtitle {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 28px
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .form-group.full {
+      grid-column: 1/-1
+    }
+
+    label {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 500
+    }
+
+    input,
+    select,
+    textarea {
+      background: var(--light);
+      border: 1px solid #333;
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+      width: 100%
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--dark)
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px
+    }
+
+    select option {
+      background: var(--light)
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1
+    }
+
+    .close-btn:hover {
+      color: var(--text)
+    }
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px
+    }
+
+    .preview-poster {
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      border-radius: 8px;
+      background: var(--light);
+      display: none;
+      margin-top: 8px
+    }
+
+    .url-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end
+    }
+
+    .url-row input {
+      flex: 1
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center
+    }
+
+    .modal-overlay.open {
+      display: flex
+    }
+
+    .modal-box {
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: min(420px, 95vw);
+      padding: 36px;
+      position: relative
+    }
+
+    .modal-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+      text-align: center
+    }
+
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px
+    }
+
+    .modal-footer-text {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: var(--muted)
+    }
+
+    .modal-footer-text a {
+      color: blue;
+      cursor: pointer;
+      text-decoration: none
+    }
+
+    .alert {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: none
+    }
+
+    .alert-success {
+      background: var(--light);
+      color: black;
+      border: 1px solid rgba(34, 197, 94, 0.3)
+    }
+
+    .alert-error {
+      background: var(--light);
+      color: var(--red);
+      border: 1px solid black
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted)
+    }
+
+    .empty-state span {
+      font-size: 4rem;
+      display: block;
+      margin-bottom: 16px
+    }
+
+    .empty-state h3 {
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      color: var(--text)
+    }
+
+    /* Profile offcanvas trigger */
+#profileArea:hover div { opacity: 0.85; }
+
+/* Booking card in modal */
+.booking-card {
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+}
+.booking-card strong { display: block; font-size: 1rem; margin-bottom: 6px; color: #111; }
+.booking-card span   { color: #555; display: inline-block; margin-right: 12px; }
+.booking-ref         { font-size: 0.75rem; color: #aaa; margin-top: 6px; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 50px 40px 30px;
+      margin-top: 60px
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px
+    }
+
+    .footer-brand .brand {
+      font-size: 1.8rem;
+      margin-bottom: 12px
+    }
+
+    .footer-brand p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.7
+    }
+
+    .footer-col h5 {
+      font-weight: 600;
+      margin-bottom: 16px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted)
+    }
+
+    .footer-col a {
+      display: block;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      transition: color 0.2s
+    }
+
+    .footer-col a:hover {
+      color: blue
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px
+    }
+
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .social-icon:hover {
+      transform: translateY(-2px)
+    }
+    .bmtbg {
+        height: 50px;
+        width: auto;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem
+    }
+
+</style>
+<body>
+<nav>
+    <img src="book my ticket.png" alt="Brand Logo" class="brand">
+    <div class="nav-actions" id="navActions">
+        <button class="btn btn-admin" onclick="openAdminLogin()">⚙ Admin</button>
+        <button class="btn btn-outline" id="btnLogin" onclick="openModal('loginModal')">Login</button>
+        <button class="btn btn-primary" id="btnSignup" onclick="openModal('signupModal')">Sign Up</button>
+        <!-- shown only after login -->
+        <div id="profileArea" style="display:none; cursor:pointer;" onclick="openProfile()">
+            <div style="width:38px;height:38px;border-radius:50%;background:var(--red);color:white;
+                        display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;"
+                 id="profileInitial">U</div>
+        </div>
+    </div>
+</nav>
+<div class="hero">
+    <h1>BOOK YOUR <em>SEAT.</em><br>OWN THE NIGHT.</h1>
+    <p>Catch the latest blockbusters - book tickets in seconds.</p>
+</div>
+<div class="section">
+    <div class="section-header">
+        <h2 class="section-title">NOW SHOWING</h2>
+    </div>
+    <div class="movie-grid" id="movieGrid"></div>
+</div>
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <img src="bmtbg.png" alt="Brand Logo" class="bmtbg">
+            <p>Your one-stop destination for booking movie tickets. Experience cinema like never before.</p>
+            <div class="footer-social">
+                <img src="xlogo.png" class="social-icon">
+                <img src="linkedInlogo.png" class="social-icon">
+                <img src="instagramlogo.png" class="social-icon">
+                <img src="facebooklogo.png" class="social-icon">
+                <img src="youtubelogo.png" class="social-icon">
+            </div>
+        </div>
+        <div class="footer-col">
+            <h5>Company</h5>
+            <a href="#">About Us</a><a href="#">Careers</a><a href="#">Blog</a><a href="#">Press</a>
+        </div>
+        <div class="footer-col">
+            <h5>Legal</h5>
+            <a href="#">Privacy Policy</a><a href="#">Terms of Use</a><a href="#">Cookie Policy</a><a
+                href="#">Disclaimer</a>
+        </div>
+        <div class="footer-col">
+            <h5>Support</h5>
+            <a href="#">Help Center</a><a href="#">Contact Us</a><a href="#">Refund Policy</a><a href="#">FAQs</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p> Copyright 2026 © Book My Ticket. All Rights Reserved.</p>
+        <p>The content and images used on this site are Copyright protected and copyrights vests with the respective
+            owners. The usage of the content and images on this website is intended to promote the works and no
+            endorsement of the artist shall be implied. Unauthorized use is prohibited and punishable by law.</p>
+    </div>
+</footer>
+
+<!-- ADMIN PANEL -->
+<div class="admin-overlay" id="adminOverlay">
+    <div class="admin-panel">
+        <button class="close-btn" onclick="closeAdmin()">✕</button>
+        <div class="admin-title">Add New Movie</div>
+        <p class="admin-subtitle">Fill in the details — the movie appears on the homepage instantly.</p>
+        <div class="form-grid">
+            <div class="form-group full"><label>Movie Title *</label><input type="text" id="a-title"
+                                                                            placeholder="e.g. Kalki 2898 AD" /></div>
+            <div class="form-group"><label>Genre *</label>
+                <select id="a-genre">
+                    <option value="">Select genre</option>
+                    <option>Action</option>
+                    <option>Comedy</option>
+                    <option>Drama</option>
+                    <option>Horror</option>
+                    <option>Romance</option>
+                    <option>Sci-Fi</option>
+                    <option>Thriller</option>
+                    <option>Fantasy</option>
+                    <option>Animation</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Language *</label>
+                <select id="a-lang">
+                    <option value="">Select language</option>
+                    <option>Tamil</option>
+                    <option>Telugu</option>
+                    <option>Hindi</option>
+                    <option>Malayalam</option>
+                    <option>Kannada</option>
+                    <option>English</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Duration (e.g. 2h 30m)</label><input type="text" id="a-duration"
+                                                                                placeholder="2h 30m" /></div>
+            <div class="form-group"><label>Rating (1–10)</label><input type="number" id="a-rating" min="1" max="10"
+                                                                       step="0.1" placeholder="8.5" /></div>
+            <div class="form-group full">
+                <label>Poster Image URL</label>
+                <div class="url-row">
+                    <input type="text" id="a-poster" placeholder="Paste any image URL (IMDB, Wikipedia, etc.)" />
+                    <button class="btn btn-outline" style="white-space:nowrap;padding:10px 14px"
+                            onclick="previewPoster()">Preview</button>
+                </div>
+                <img id="posterPreview" class="preview-poster" alt="Preview" />
+            </div>
+            <div class="form-group full"><label>Short Description</label><textarea id="a-desc"
+                                                                                   placeholder="Brief synopsis of the movie..."></textarea></div>
+            <div class="form-group"><label>Ticket Price (Rs.)</label><input type="number" id="a-price" placeholder="220"
+                                                                            min="0" /></div>
+            <div class="form-group"><label>Release Status</label>
+                <select id="a-status">
+                    <option value="new">New Release</option>
+                    <option value="showing">Now Showing</option>
+                    <option value="upcoming">Coming Soon</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="btn btn-gold" style="flex:1;padding:12px" onclick="addMovie()">Add Movie to Homepage</button>
+            <button class="btn btn-outline" onclick="closeAdmin()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- LOGIN -->
+<div class="modal-overlay" id="loginModal">
+    <div class="modal-box">
+        <button class="close-btn" onclick="closeModal('loginModal')">✕</button>
+        <div class="modal-title">Welcome Back</div>
+        <div class="modal-form">
+            <div id="loginAlert" class="alert"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="l-email" placeholder="you@email.com" />
+            </div>
+            <div class="form-group"><label>Password</label><input type="password" id="l-pass" placeholder="Your password" />
+            </div>
+            <button class="btn btn-primary" style="padding:12px;margin-top:4px" onclick="doLogin()">Login</button>
+        </div>
+        <div class="modal-footer-text">Don't have an account? <a onclick="switchModal('loginModal','signupModal')" href="#">Sign
+            up</a></div>
+    </div>
+</div>
+
+<!-- SIGNUP -->
+<div class="modal-overlay" id="signupModal" th:action="@{/home/save}" th:object="${users}" method="get">
+    <div class="modal-box">
+        <button class="close-btn" onclick="closeModal('signupModal')">✕</button>
+        <div class="modal-title">Create Account</div>
+        <div class="modal-form">
+            <div id="signupAlert" class="alert"></div>
+            <input type="hidden" placeholder="Id" class="inputs" id="id" name="id">
+            <div class="form-group"><label>Full Name</label><input type="text" id="s-name" placeholder="Your name"  /></div>
+            <div class="form-group"><label>Email</label><input type="email" id="s-email" placeholder="you@email.com"  />
+            </div>
+            <div class="form-group"><label>Phone</label><input type="tel" id="s-phone" placeholder="10-digit number" />
+            </div>
+            <div class="form-group"><label>Password</label><input type="password" id="s-pass"
+                                                                  placeholder="Min 8 characters" /></div>
+            <div class="form-group"><label>Confirm Password</label><input type="password" id="s-confirm"
+                                                                          placeholder="Re-enter password" /></div>
+            <button class="btn btn-primary" style="padding:12px;margin-top:4px" onclick="doSignup()">Create Account</button>
+        </div>
+        <div class="modal-footer-text">Already have an account? <a
+                onclick="switchModal('signupModal','loginModal')" style="color: blue;">Login</a></div>
+    </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-overlay" id="adminLoginModal">
+    <div class="modal-box">
+        <button class="close-btn" onclick="closeModal('adminLoginModal')">✕</button>
+        <div class="modal-title">Admin Login</div>
+        <div class="modal-form">
+            <div id="adminLoginAlert" class="alert"></div>
+            <div class="form-group">
+                <label>Admin Email</label>
+                <input type="email" id="admin-email" placeholder="admin@bmt.com" />
+            </div>
+            <div class="form-group">
+                <label>Admin Password</label>
+                <input type="password" id="admin-pass" placeholder="Enter admin password" />
+            </div>
+            <button class="btn btn-primary" style="padding:12px;margin-top:4px"
+                    onclick="doAdminLogin()">Login as Admin</button>
+        </div>
+    </div>
+</div>
+
+<!-- USER PROFILE OFFCANVAS (Bootstrap) -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas">
+    <div class="offcanvas-header" style="border-bottom:1px solid #eee;">
+        <h5 class="offcanvas-title" style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:2px;">
+            MY PROFILE</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body" style="display:flex;flex-direction:column;gap:12px;padding-top:24px;">
+        <div style="text-align:center;margin-bottom:16px;">
+            <div style="width:70px;height:70px;border-radius:50%;background:var(--red);color:white;
+                        display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;
+                        margin:0 auto 10px;" id="offcanvasInitial">U</div>
+            <div style="font-weight:600;font-size:1.1rem;" id="offcanvasName">User</div>
+            <div style="color:#888;font-size:0.85rem;" id="offcanvasEmail"></div>
+        </div>
+        <button class="btn btn-outline" style="width:90%;padding:12px;text-align:left; margin: 10px 20px;"
+                onclick="viewMyBookings()">🎟 My Bookings</button>
+        <button class="btn btn-primary" style="width:90%;padding:12px; margin: 0px 20px;"
+                onclick="doLogout()">⇤ Log Out</button>
+    </div>
+</div>
+
+<!-- MY BOOKINGS MODAL -->
+<div class="modal-overlay" id="bookingsModal">
+    <div class="modal-box" style="max-width:600px;width:95vw;">
+        <button class="close-btn" onclick="closeModal('bookingsModal')">✕</button>
+        <div class="modal-title">My Bookings</div>
+        <div id="bookingsList" style="margin-top:16px;max-height:400px;overflow-y:auto;"></div>
+    </div>
+</div>
+<div class="toast" id="toast"><span id="toastIcon">✓</span><span id="toastMsg"></span></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Admin panel open/close
+    function openAdmin() { document.getElementById('adminOverlay').classList.add('open'); }
+    function closeAdmin() { document.getElementById('adminOverlay').classList.remove('open'); }
+
+    // Admin Login
+function openAdminLogin() { openModal('adminLoginModal'); }
+
+function doAdminLogin() {
+    const email = document.getElementById('admin-email').value.trim();
+    const pass  = document.getElementById('admin-pass').value;
+    const el    = document.getElementById('adminLoginAlert');
+
+    if (email === 'admin@bmt.com' && pass === 'admin123') {
+        closeModal('adminLoginModal');
+        window.location.href = '/admin';   // redirect to admin page
+    } else {
+        showAlert(el, 'Invalid admin credentials.', 'error');
+    }
+}
+
+//  Nav: switch between guest and logged-in state
+function updateNavForLoggedInUser(name) {
+    document.getElementById('btnLogin').style.display   = 'none';
+    document.getElementById('btnSignup').style.display  = 'none';
+    document.getElementById('profileArea').style.display = 'flex';
+    const initial = (name || 'U').charAt(0).toUpperCase();
+    document.getElementById('profileInitial').textContent  = initial;
+    document.getElementById('offcanvasInitial').textContent = initial;
+    document.getElementById('offcanvasName').textContent    = name;
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+    document.getElementById('offcanvasEmail').textContent  = user.email || '';
+}
+
+function openProfile() {
+    const offcanvas = new bootstrap.Offcanvas(document.getElementById('profileOffcanvas'));
+    offcanvas.show();
+}
+
+function doLogout() {
+    sessionStorage.removeItem('user');
+    document.getElementById('btnLogin').style.display   = 'inline-block';
+    document.getElementById('btnSignup').style.display  = 'inline-block';
+    document.getElementById('profileArea').style.display = 'none';
+    bootstrap.Offcanvas.getInstance(document.getElementById('profileOffcanvas'))?.hide();
+    showToast('Logged out successfully.', 'success');
+}
+
+//  My Bookings
+async function viewMyBookings() {
+    bootstrap.Offcanvas.getInstance(document.getElementById('profileOffcanvas'))?.hide();
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+    if (!user.id) return;
+
+    openModal('bookingsModal');
+    document.getElementById('bookingsList').innerHTML = '<p style="color:#888;">Loading...</p>';
+
+    try {
+        const res      = await fetch('/api/bookings/user/' + user.id);
+        const bookings = await res.json();
+
+        if (!bookings.length) {
+            document.getElementById('bookingsList').innerHTML =
+                '<p style="color:#888;text-align:center;padding:20px;">No bookings yet. Book your first movie!</p>';
+            return;
+        }
+
+        document.getElementById('bookingsList').innerHTML = bookings.map(b => {
+
+// Parse booking date to check if it's future or past
+const bookingDate = new Date(b.bookingDate + ' ' + b.showTime);
+const now = new Date();
+const isFuture = bookingDate >= now;
+
+const cancelBtn = isFuture
+? `<button onclick="cancelBooking(${b.id}, '${b.movieTitle.replace(/'/g, " \\'")}', '${b.bookingRef}' )" style="margin-top:10px; padding:6px 16px; background:white; color:#e63946;
+                       border:1.5px solid #e63946; border-radius:6px; font-size:0.82rem;
+                       font-weight:600; cursor:pointer; transition:all .2s;"
+    onmouseover="this.style.background='#e63946';this.style.color='white';"
+    onmouseout="this.style.background='white';this.style.color='#e63946';">
+    ✕ Cancel Booking
+</button>`
+: `<span style="margin-top:10px;display:inline-block;font-size:0.78rem;
+                        color:#aaa;border:1px solid #ddd;padding:5px 12px;
+                        border-radius:6px;">✓ Completed</span>`;
+
+return `
+<div class="booking-card" id="booking-${b.id}">
+    <strong>🎬 ${b.movieTitle}</strong>
+    <span>📅 ${b.bookingDate}</span>
+    <span>🕐 ${b.showTime}</span>
+    <span>💺 ${b.seats}</span>
+    <span>₹${b.totalAmount}</span>
+    <div class="booking-ref">Ref: ${b.bookingRef}</div>
+    ${cancelBtn}
+</div>
+`;
+}).join('');
+
+    } catch {
+        document.getElementById('bookingsList').innerHTML =
+            '<p style="color:red;">Could not load bookings.</p>';
+    }
+}
+async function cancelBooking(bookingId, movieTitle, ref) {
+    if (!confirm('Cancel booking for "' + movieTitle + '" (Ref: ' + ref + ')?\nThis cannot be undone.')) return;
+
+    try {
+        const res = await fetch('/api/bookings/' + bookingId, { method: 'DELETE' });
+        if (!res.ok) { showToast('Failed to cancel booking.', 'error'); return; }
+
+        // Remove the card from the UI instantly
+        const card = document.getElementById('booking-' + bookingId);
+        if (card) card.remove();
+
+        // Show empty message if no bookings left
+        const remaining = document.querySelectorAll('.booking-card');
+        if (remaining.length === 0) {
+            document.getElementById('bookingsList').innerHTML =
+                '<p style="color:#888;text-align:center;padding:20px;">No bookings yet. Book your first movie!</p>';
+        }
+
+        showToast('Booking cancelled successfully.', 'success');
+    } catch {
+        showToast('Server error. Please try again.', 'error');
+    }
+}
+
+// ── On page load: restore session if user was logged in ─────
+(function checkSession() {
+    const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+    if (user && user.name) {
+        updateNavForLoggedInUser(user.name);
+    }
+})();
+
+document.getElementById('adminLoginModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal('adminLoginModal'); });
+document.getElementById('bookingsModal').addEventListener('click',   e => { if (e.target === e.currentTarget) closeModal('bookingsModal'); });
+
+    //  Poster preview
+    function previewPoster() {
+        const u = document.getElementById('a-poster').value.trim();
+        const img = document.getElementById('posterPreview');
+        if (u) { img.src = u; img.style.display = 'block'; }
+    }
+
+    //  Add movie → POST to DB
+    async function addMovie() {
+    const title  = document.getElementById('a-title').value.trim();
+    const genre  = document.getElementById('a-genre').value;
+    const lang   = document.getElementById('a-lang').value;
+    if (!title || !genre || !lang) { showToast('Title, Genre & Language are required.', 'error'); return; }
+
+    const movie = {
+        title,
+        genre,
+        language : lang,
+        duration : document.getElementById('a-duration').value.trim(),
+        rating   : document.getElementById('a-rating').value.trim(),
+        poster   : document.getElementById('a-poster').value.trim(),
+        desc     : document.getElementById('a-desc').value.trim(),
+        price    : parseInt(document.getElementById('a-price').value) || 0,
+        status   : document.getElementById('a-status').value
+    };
+
+    console.log('Sending movie payload:', movie); // shows in browser console
+
+    try {
+        const res = await fetch('/api/movies', {
+            method  : 'POST',
+            headers : { 'Content-Type': 'application/json' },
+            body    : JSON.stringify(movie)
+        });
+
+        console.log('Response status:', res.status); // check this in console
+
+        if (!res.ok) {
+            const errText = await res.text();
+            console.error('Server error response:', errText);
+            showToast('Failed to add movie: ' + res.status + ' – check console.', 'error');
+            return;
+        }
+
+        showToast('"' + title + '" added! 🎬', 'success');
+        closeAdmin();
+        renderMovies();
+        ['a-title','a-duration','a-rating','a-poster','a-desc','a-price']
+            .forEach(id => document.getElementById(id).value = '');
+        document.getElementById('a-genre').value  = '';
+        document.getElementById('a-lang').value   = '';
+        document.getElementById('a-status').value = 'new';
+        document.getElementById('posterPreview').style.display = 'none';
+
+    } catch (err) {
+        console.error('Fetch error:', err);
+        showToast('Could not reach server. Is Spring Boot running?', 'error');
+    }
+}
+
+    //  Render movies from DB
+    async function renderMovies() {
+        const grid = document.getElementById('movieGrid');
+        grid.innerHTML = '<p style="color:var(--muted);padding:40px;">Loading...</p>';
+        try {
+            const res    = await fetch('/api/movies');
+            const movies = await res.json();
+            if (!movies.length) {
+                grid.innerHTML = `<div class="empty-state"><span>🎬</span><h3>No movies yet</h3><p>Use the Admin panel to add one.</p></div>`;
+                return;
+            }
+            grid.innerHTML = movies.map(m => `
+                <div class="movie-card" onclick="window.location.href='/booking?id=${m.id}'">
+                    ${m.status === 'new' ? `<span class="badge-new">NEW</span>` : ''}
+                    ${m.poster
+                        ? `<img class="movie-poster" src="${m.poster}" alt="${m.title}" onerror="this.style.display='none'">`
+                        : `<div class="poster-placeholder"><span>🎬</span><p>${m.title}</p></div>`}
+                    <div class="movie-info">
+                        <div class="movie-title">${m.title}</div>
+                        <div class="movie-meta">
+                            <span class="badge badge-genre">${m.genre || ''}</span>
+                            <span class="badge badge-lang">${m.language || ''}</span>
+                        </div>
+                        <button class="btn-book" onclick="event.stopPropagation(); window.location.href='/booking?id=${m.id}'">
+                            Book Tickets
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        } catch {
+            grid.innerHTML = `<div class="empty-state"><span>⚠️</span><h3>Could not load movies</h3><p>Make sure the backend is running.</p></div>`;
+        }
+    }
+
+    // Modal helpers
+    function openModal(id)         { document.getElementById(id).classList.add('open'); }
+    function closeModal(id)        { document.getElementById(id).classList.remove('open'); }
+    function switchModal(a, b)     { closeModal(a); openModal(b); }
+
+    //  Signup → POST to DB
+    async function doSignup() {
+        const name    = document.getElementById('s-name').value.trim();
+        const email   = document.getElementById('s-email').value.trim();
+        const phone   = document.getElementById('s-phone').value.trim();
+        const pass    = document.getElementById('s-pass').value;
+        const confirm = document.getElementById('s-confirm').value;
+        const el      = document.getElementById('signupAlert');
+
+        if (!name || !email || !phone || !pass)  { showAlert(el, 'All fields are required.', 'error'); return; }
+        if (!/^\d{10}$/.test(phone))             { showAlert(el, 'Enter a valid 10-digit phone number.', 'error'); return; }
+        if (pass.length < 8)                     { showAlert(el, 'Password must be at least 8 characters.', 'error'); return; }
+        if (pass !== confirm)                    { showAlert(el, 'Passwords do not match.', 'error'); return; }
+
+        try {
+            const res  = await fetch('/home/save', {
+                method  : 'POST',
+                headers : { 'Content-Type': 'application/json' },
+                body    : JSON.stringify({ fullName: name, email, phoneNumber: phone, password: pass })
+            });
+            const data = await res.json();
+            if (!res.ok) { showAlert(el, data.error || 'Signup failed.', 'error'); return; }
+            showAlert(el, 'Account created! You can now login.', 'success');
+            setTimeout(() => { closeModal('signupModal'); el.style.display = 'none'; }, 1500);
+        } catch {
+            showAlert(el, 'Server error. Please try again.', 'error');
+        }
+    }
+
+    //  Login → check credentials with DB
+    async function doLogin() {
+    const email = document.getElementById('l-email').value.trim();
+    const pass  = document.getElementById('l-pass').value;
+    const el    = document.getElementById('loginAlert');
+
+    if (!email || !pass) { showAlert(el, 'Please enter email and password.', 'error'); return; }
+
+    try {
+        const res  = await fetch('/home/login', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password: pass })
+        });
+        const data = await res.json();
+        if (!res.ok) { showAlert(el, data.error || 'Login failed.', 'error'); return; }
+
+        // Store session in sessionStorage
+        sessionStorage.setItem('user', JSON.stringify({ name: data.name, email: email, id: data.id }));
+        closeModal('loginModal');
+        el.style.display = 'none';
+        updateNavForLoggedInUser(data.name);
+        showToast('Logged in as ' + data.name + ' 👋', 'success');
+    } catch {
+        showAlert(el, 'Server error. Please try again.', 'error');
+    }
+}
+
+    //  Helpers
+    function showAlert(el, msg, type) {
+        el.className = 'alert alert-' + type;
+        el.textContent = msg;
+        el.style.display = 'block';
+    }
+    function showToast(msg, type = 'success') {
+        const t = document.getElementById('toast');
+        document.getElementById('toastMsg').textContent  = msg;
+        document.getElementById('toastIcon').textContent = type === 'success' ? '✓' : '✕';
+        t.className = 'toast ' + type + ' show';
+        setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    //  Overlay close on backdrop click
+    document.getElementById('adminOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeAdmin(); });
+    document.getElementById('loginModal').addEventListener('click',   e => { if (e.target === e.currentTarget) closeModal('loginModal'); });
+    document.getElementById('signupModal').addEventListener('click',  e => { if (e.target === e.currentTarget) closeModal('signupModal'); });
+
+    renderMovies();
+</script>
+</body>
+</html>
