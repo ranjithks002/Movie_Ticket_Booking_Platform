@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<style>
+    :root {
+            --red: #FF0000;
+            --gold: #FFD400;
+            --dark: #0d0d0d;
+            --dark2: #1a1a1a;
+            --dark3: #242424;
+            --text: #000000;
+            --light: #F3F4F4;
+            --muted: #888;
+            --border: #000000;
+             --green: #08CB00;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html::-webkit-scrollbar {
+    display: none;
+}
+
+        body {
+            background: var(--light);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+        }
+        nav img {
+        height: 50px;
+        width: auto;
+    }
+    nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 60px;
+            background-color: white;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2a2a2a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color .2s;
+        }
+
+        .back-btn:hover {
+            color: var(--text);
+        }
+         .page-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+        }
+
+        /* ── MOVIE HERO ── */
+        .movie-hero {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            margin-bottom: 50px;
+        }
+
+        .movie-poster-wrap {
+            flex-shrink: 0;
+            width: 200px;
+        }
+
+        .movie-poster-wrap img {
+            width: 100%;
+            border-radius: 12px;
+<!--            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);-->
+        }
+
+        .poster-ph {
+            width: 100%;
+            height: 290px;
+            border-radius: 12px;
+            background: var(--dark3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+        .movie-details {
+            flex: 1;
+        }
+
+        .movie-details h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            letter-spacing: 4px;
+            line-height: 1;
+            margin-bottom: 14px;
+        }
+
+        .meta-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .meta-tag {
+            background: var(--light);
+            border: 1px solid #333;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .meta-tag.red {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--light);
+            border: 1px solid var(--gold);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 18px;
+        }
+
+        .movie-desc {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 0.95rem;
+            max-width: 500px;
+        }
+        /* ── STEPS ── */
+        .steps {
+            display: flex;
+            gap: 0;
+            margin-bottom: 40px;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: var(--dark2);
+            border: 1px solid #2a2a2a;
+            font-size: 0.8rem;
+            color: var(--light);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .step:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        .step:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        .step.active {
+            background: var(--red);
+            border-color: var(--red);
+            color: var(--light);
+            font-weight: 600;
+        }
+
+        .step.done {
+            background: rgba(230, 57, 70, 0.15);
+            border-color: var(--red);
+            color: var(--red);
+        }
+         /* ── SECTION ── */
+        .section {
+            margin-bottom: 36px;
+        }
+
+        .section-head {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        /* DATE */
+        .dates {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .date-btn {
+             padding: 10px 18px;
+            border-radius: 8px;
+            border: 1.5px solid #333;
+            background: var(--light);
+            color: black;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            text-align: center;
+            transition: all .2s;
+        }
+
+        .date-btn .day {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+            display: block;
+        }
+
+        .date-btn:hover,
+        .date-btn.selected {
+            background: var(--green);
+        }
+
+        /* SHOWTIME */
+        .showtimes {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .time-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1.5px solid #333;
+            background: var(--light);
+            color: var(--dark);
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all .2s;
+        }
+
+        .time-btn small {
+            display: block;
+            color: var(--muted);
+            font-size: 0.7rem;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .time-btn:hover,
+        .time-btn.selected {
+            background: var(--green);
+        }
+
+        /* SEATS */
+        .seat-legend {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .leg-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .leg-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+
+        .screen-label {
+            text-align: center;
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            color: var(--muted);
+            text-transform: uppercase;
+            border-top: 2px solid #444;
+            padding-top: 12px;
+            margin-bottom: 30px;
+        }
+
+        .seat-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .seat-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .row-label {
+            width: 24px;
+            text-align: right;
+            font-size: 0.75rem;
+            color: #555;
+            margin-right: 8px;
+        }
+
+        .seat {
+            width: 32px;
+            height: 28px;
+            border-radius: 4px 4px 2px 2px;
+            border: 1.5px solid #333;
+            background: var(--light);
+            cursor: pointer;
+            transition: all .15s;
+            position: relative;
+        }
+
+        .seat:hover:not(.taken) {
+            border-color: var(--gold);
+            background: rgba(244, 162, 97, 0.2);
+            transform: scale(1.1);
+        }
+
+        .seat.selected {
+            background: var(--red);
+            border-color: var(--red);
+        }
+
+        .seat.taken {
+            background: #2a2a2a;
+            border-color: #2a2a2a;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .seat.premium {
+            border-color: #f4a261;
+        }
+
+        .seat.premium.selected {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .aisle {
+            width: 20px;
+        }
+
+        /* TICKET COUNTER */
+        .qty-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .qty-ctrl {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .qty-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1.5px solid #444;
+            background: var(--dark2);
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all .2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .qty-val {
+            font-size: 1.3rem;
+            font-weight: 700;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        /* SUMMARY */
+        .summary-card {
+            background: var(--text);
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 24px;
+            position: sticky;
+            top: 90px;
+        }
+
+        .summary-card h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--light);
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            color: var(--light);
+        }
+
+        .summary-line strong {
+            color: var(--light);
+        }
+
+        .summary-line.total {
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-top: 1px solid #333;
+            padding-top: 14px;
+            margin-top: 6px;
+            color: var(--light);
+        }
+
+        .summary-line.total span {
+            color: var(--gold);
+            font-size: 1.3rem;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            background: var(--red);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        .checkout-btn:hover {
+            background: #c1121f;
+        }
+
+        .checkout-btn:disabled {
+            background: var(--red);
+            color: var(--light);
+            cursor: not-allowed;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 30px;
+            align-items: start;
+        }
+        /* SUCCESS OVERLAY */
+        .success-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--light);
+            backdrop-filter: blur(6px);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-overlay.show {
+            display: flex;
+        }
+
+        .success-box {
+            background: var(--dark2);
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 48px 40px;
+            text-align: center;
+            max-width: 420px;
+            width: 100%;
+            animation: fadeUp .3s ease;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .success-box h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 3px;
+            color: #2ecc71;
+            margin-bottom: 8px;
+        }
+
+        .success-box p {
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .ticket-no {
+            color: var(--gold);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 16px 0;
+        }
+
+        .btn {
+            padding: 11px 28px;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+            transition: all .2s;
+        }
+
+        .btn-primary {
+            background: var(--red);
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: #c1121f;
+        }
+
+        footer {
+      border-top: 1px solid var(--border);
+      padding: 50px 40px 30px;
+      margin-top: 60px
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px
+    }
+
+    .footer-brand .brand {
+      font-size: 1.8rem;
+      margin-bottom: 12px
+    }
+
+    .footer-brand p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.7
+    }
+
+    .footer-col h5 {
+      font-weight: 600;
+      margin-bottom: 16px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted)
+    }
+
+    .footer-col a {
+      display: block;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      transition: color 0.2s
+    }
+
+    .footer-col a:hover {
+      color: blue
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px
+    }
+
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .social-icon:hover {
+      transform: translateY(-2px)
+    }
+    .bmtbg {
+        height: 50px;
+        width: auto;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem
+    }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--light);
+            border: 1px solid #333;
+            border-left: 4px solid var(--red);
+            color: var(--dark);
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all .3s;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 14px 20px;
+            }
+
+            .page-wrap {
+                padding: 24px 16px 60px;
+            }
+
+            .movie-hero {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-card {
+                position: static;
+            }
+        }
+
+</style>
+
+<body>
+<nav>
+    <a href="home" class="logo"><img src="book my ticket.png" alt="Brand Logo" class="brand"></a>
+    <a href="home" class="back-btn">← Back to Movies</a>
+</nav>
+
+<div class="page-wrap">
+    <!-- MOVIE INFO -->
+    <div class="movie-hero" id="movieHero"></div>
+
+    <!-- STEPS -->
+    <div class="steps">
+        <div class="step active" id="step1">1. Date & Time</div>
+        <div class="step" id="step2">2. Seats</div>
+        <div class="step" id="step3">3. Confirm</div>
+    </div>
+
+    <div class="layout">
+        <div>
+            <!-- DATE -->
+            <div class="section" id="sec-date">
+                <div class="section-head">Choose Date</div>
+                <div class="dates" id="dates"></div>
+            </div>
+
+            <!-- TIME -->
+            <div class="section" id="sec-time" style="display:none;">
+                <div class="section-head">Choose Showtime</div>
+                <div class="showtimes" id="showtimes"></div>
+            </div>
+
+            <!-- SEATS -->
+            <div class="section" id="sec-seats" style="display:none;">
+                <div class="section-head">Select Seats</div>
+                <div class="seat-legend">
+                    <div class="leg-item">
+                        <div class="leg-dot" style="background:var(--light);border:1.5px solid #444;"></div>
+                        Available
+                    </div>
+                    <div class="leg-item">
+                        <div class="leg-dot" style="background:var(--red);border-color:var(--red);"></div> Selected
+                    </div>
+                    <div class="leg-item">
+                        <div class="leg-dot" style="background: var(--muted);"></div> Taken
+                    </div>
+                    <div class="leg-item">
+                        <div class="leg-dot" style="background:var(--light);border:1.5px solid var(--gold);"></div>
+                        Premium
+                    </div>
+                </div>
+                <div class="screen-label">▬▬▬   SCREEN THIS WAY ▬▬▬</div>
+                <div class="seat-grid" id="seatGrid"></div>
+            </div>
+        </div>
+
+        <!-- SUMMARY -->
+        <div>
+            <div class="summary-card">
+                <h3>BOOKING SUMMARY</h3>
+                <div class="summary-line"><span>Movie</span><strong id="s-movie">–</strong></div>
+                <div class="summary-line"><span>Date</span><strong id="s-date">–</strong></div>
+                <div class="summary-line"><span>Time</span><strong id="s-time">–</strong></div>
+                <div class="summary-line"><span>Seats</span><strong id="s-seats">–</strong></div>
+                <div class="summary-line"><span>Tickets</span><strong id="s-qty">0</strong></div>
+                <div class="summary-line total"><span>Total</span><span id="s-total">₹0</span></div>
+                <button class="checkout-btn" id="checkoutBtn" disabled onclick="confirmBooking()">Confirm
+                    Booking</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+    <div class="success-box">
+        <div class="success-icon">🎟️</div>
+        <h2>BOOKING CONFIRMED!</h2>
+        <p>Your tickets are booked successfully!</p>
+        <div class="ticket-no" id="ticketNo"></div>
+        <p id="booking-details" style="font-size:0.85rem;"></p>
+        <a href="home" class="btn btn-primary">Back to Movies</a>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <img src="bmtbg.png" alt="Brand Logo" class="bmtbg">
+            <p>Your one-stop destination for booking movie tickets. Experience cinema like never before.</p>
+            <div class="footer-social">
+                <img src="xlogo.png" class="social-icon">
+                <img src="linkedInlogo.png" class="social-icon">
+                <img src="instagramlogo.png" class="social-icon">
+                <img src="facebooklogo.png" class="social-icon">
+                <img src="youtubelogo.png" class="social-icon">
+            </div>
+        </div>
+        <div class="footer-col">
+            <h5>Company</h5>
+            <a href="#">About Us</a><a href="#">Careers</a><a href="#">Blog</a><a href="#">Press</a>
+        </div>
+        <div class="footer-col">
+            <h5>Legal</h5>
+            <a href="#">Privacy Policy</a><a href="#">Terms of Use</a><a href="#">Cookie Policy</a><a
+                href="#">Disclaimer</a>
+        </div>
+        <div class="footer-col">
+            <h5>Support</h5>
+            <a href="#">Help Center</a><a href="#">Contact Us</a><a href="#">Refund Policy</a><a href="#">FAQs</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p> Copyright 2026 © Book My Ticket. All Rights Reserved.</p>
+        <p>The content and images used on this site are Copyright protected and copyrights vests with the respective
+            owners. The usage of the content and images on this website is intended to promote the works and no
+            endorsement of the artist shall be implied. Unauthorized use is prohibited and punishable by law.</p>
+    </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const PRICE_NORMAL  = 180;
+    const PRICE_PREMIUM = 280;
+
+    //  Read movie ID from URL: /booking?id=3
+    const params  = new URLSearchParams(window.location.search);
+    const movieId = parseInt(params.get('id'));
+
+    let movie = null;
+
+    //  Fetch movie from DB 
+    async function loadMovie() {
+        try {
+            const res = await fetch('/api/movies/' + movieId);
+            if (!res.ok) throw new Error('Not found');
+            movie = await res.json();
+        } catch {
+            movie = { id: 0, title: 'Movie Not Found', genre: '', language: '', duration: '', rating: '', poster: '', desc: 'This movie could not be found.' };
+        }
+
+        document.title = `Book – ${movie.title} | BookMyTicket`;
+
+        document.getElementById('movieHero').innerHTML = `
+            <div class="movie-poster-wrap">
+                ${movie.poster
+                    ? `<img src="${movie.poster}" alt="${movie.title}" onerror="this.parentNode.innerHTML='<div class=\\'poster-ph\\'>🎬</div>'">`
+                    : `<div class="poster-ph">🎬</div>`}
+            </div>
+            <div class="movie-details">
+                <h1>${movie.title}</h1>
+                <div class="meta-row">
+                    ${movie.genre    ? `<span class="meta-tag red">${movie.genre}</span>`  : ''}
+                    ${movie.language ? `<span class="meta-tag">${movie.language}</span>`   : ''}
+                    ${movie.duration ? `<span class="meta-tag">${movie.duration}</span>`   : ''}
+                    ${movie.cert     ? `<span class="meta-tag">${movie.cert}</span>`       : ''}
+                </div>
+                ${movie.rating ? `<div class="rating-badge">★ ${movie.rating} / 10</div>` : ''}
+                <p class="movie-desc">${movie.desc || ''}</p>
+            </div>`;
+
+        document.getElementById('s-movie').textContent = movie.title;
+    }
+
+    //  Dates 
+    let selectedDate = null, selectedTime = null, selectedSeats = [];
+    const today      = new Date();
+    const dayNames   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    const datesEl = document.getElementById('dates');
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        const btn = document.createElement('button');
+        btn.className = 'date-btn';
+        btn.innerHTML = `<span class="day">${d.getDate()}</span>${dayNames[d.getDay()]}<br><small>${monthNames[d.getMonth()]}</small>`;
+        btn.onclick = () => {
+            document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedDate = `${d.getDate()} ${monthNames[d.getMonth()]}`;
+            document.getElementById('s-date').textContent = selectedDate;
+            showSection('time');
+            document.getElementById('step1').classList.add('done');
+            selectedTime = null; selectedSeats = []; updateSummary();
+        };
+        datesEl.appendChild(btn);
+    }
+
+    //  Showtimes 
+    const shows = [
+        { time: '10:00 AM', type: 'Morning',   avail: 'Filling Fast' },
+        { time: '1:30 PM',  type: 'Matinee',   avail: 'Available' },
+        { time: '4:45 PM',  type: 'Evening',   avail: 'Available' },
+        { time: '8:00 PM',  type: 'Night',     avail: 'Almost Full' },
+        { time: '10:30 PM', type: 'Late Night', avail: 'Available' },
+    ];
+    const showtimesEl = document.getElementById('showtimes');
+    shows.forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'time-btn';
+        btn.innerHTML = `${s.time}<small>${s.type} · ${s.avail}</small>`;
+        btn.onclick = () => {
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedTime = s.time;
+            document.getElementById('s-time').textContent = selectedTime;
+            showSection('seats');
+            document.getElementById('step2').classList.add('active');
+            buildSeats();
+            selectedSeats = []; updateSummary();
+        };
+        showtimesEl.appendChild(btn);
+    });
+
+    //  Seat map 
+    const ROWS         = ['A','B','C','D','E','F','G','H'];
+    const COLS         = 12;
+    const PREMIUM_ROWS = ['A','B'];
+
+    function buildSeats() {
+        const grid = document.getElementById('seatGrid');
+        grid.innerHTML = '';
+        const seed = (selectedTime || '').charCodeAt(0) || 49;
+        ROWS.forEach(row => {
+            const rowEl = document.createElement('div');
+            rowEl.className = 'seat-row';
+            const lbl = document.createElement('div');
+            lbl.className = 'row-label';
+            lbl.textContent = row;
+            rowEl.appendChild(lbl);
+            for (let c = 1; c <= COLS; c++) {
+                if (c === 5 || c === 9) { const aisle = document.createElement('div'); aisle.className = 'aisle'; rowEl.appendChild(aisle); }
+                const seat      = document.createElement('div');
+                const seatId    = `${row}${c}`;
+                const isPremium = PREMIUM_ROWS.includes(row);
+                const isTaken   = ((seed * c * row.charCodeAt(0)) % 7 === 0);
+                seat.className  = 'seat' + (isPremium ? ' premium' : '') + (isTaken ? ' taken' : '');
+                seat.title      = `${seatId} ${isPremium ? '(Premium)' : ''} – ₹${isPremium ? PRICE_PREMIUM : PRICE_NORMAL}`;
+                seat.dataset.id = seatId;
+                if (!isTaken) seat.onclick = () => toggleSeat(seat, seatId, isPremium);
+                rowEl.appendChild(seat);
+            }
+            grid.appendChild(rowEl);
+        });
+    }
+
+    function toggleSeat(el, id, isPremium) {
+        const idx = selectedSeats.findIndex(s => s.id === id);
+        if (idx !== -1) { selectedSeats.splice(idx, 1); el.classList.remove('selected'); }
+        else            { selectedSeats.push({ id, isPremium }); el.classList.add('selected'); }
+        updateSummary();
+    }
+
+    function updateSummary() {
+        const qty   = selectedSeats.length;
+        const total = selectedSeats.reduce((acc, s) => acc + (s.isPremium ? PRICE_PREMIUM : PRICE_NORMAL), 0);
+        document.getElementById('s-qty').textContent   = qty;
+        document.getElementById('s-seats').textContent = qty ? selectedSeats.map(s => s.id).join(', ') : '–';
+        document.getElementById('s-total').textContent = `₹${total}`;
+        document.getElementById('checkoutBtn').disabled = !(selectedDate && selectedTime && qty > 0);
+        if (qty > 0) document.getElementById('step3').classList.add('active');
+    }
+
+    function showSection(which) {
+        document.getElementById('sec-time').style.display  = (which === 'time' || which === 'seats') ? 'block' : 'none';
+        document.getElementById('sec-seats').style.display = which === 'seats' ? 'block' : 'none';
+    }
+
+   async function confirmBooking() {
+    if (!selectedDate || !selectedTime || selectedSeats.length === 0) {
+        showToast('Please complete all selections.');
+        return;
+    }
+
+    const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+    if (!user) { showToast('Please login to book tickets.'); return; }
+
+    const ticketNo = 'BMT-' + Math.random().toString(36).toUpperCase().slice(2, 9);
+    const total    = selectedSeats.reduce((acc, s) => acc + (s.isPremium ? PRICE_PREMIUM : PRICE_NORMAL), 0);
+
+    const booking = {
+        userId       : user.id,
+        movieId      : movie.id,
+        movieTitle   : movie.title,
+        bookingDate : new Date(selectedDate + ' ' + new Date().getFullYear()).toISOString().split('T')[0],
+        showTime     : selectedTime,
+        seats        : selectedSeats.map(s => s.id).join(', '),
+        totalAmount  : total,
+        bookingRef   : ticketNo
+    };
+
+    try {
+        await fetch('/api/bookings', {
+            method  : 'POST',
+            headers : { 'Content-Type': 'application/json' },
+            body    : JSON.stringify(booking)
+        });
+    } catch (err) {
+        console.error('Booking save failed:', err);
+    }
+
+    document.getElementById('ticketNo').textContent       = ticketNo;
+    document.getElementById('booking-details').innerHTML  =
+        movie.title + ' · ' + selectedDate + ' · ' + selectedTime +
+        '<br>' + selectedSeats.map(s => s.id).join(', ');
+    document.getElementById('successOverlay').classList.add('show');
+}
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg; t.className = 'toast show';
+        setTimeout(() => { t.className = 'toast'; }, 3000);
+    }
+
+    // Init 
+    loadMovie();
+</script>
+</body>
+
+</html>
